@@ -19,6 +19,7 @@ let package = Package(
             name: "Swiftmapper",
             dependencies: ["libmapper"],
         ),
+        .executableTarget(name: "Demo", dependencies: ["Swiftmapper"]),
         .systemLibrary(
             name: "libmapper",
             pkgConfig: "libmapper",
