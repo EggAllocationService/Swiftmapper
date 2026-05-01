@@ -1,0 +1,5 @@
+module libmapper [system] {
+    header "shim.h"
+    link "mapper"
+    export *
+}
