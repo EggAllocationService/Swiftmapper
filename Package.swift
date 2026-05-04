@@ -14,6 +14,10 @@ let package = Package(
             name: "Swiftmapper",
             targets: ["Swiftmapper"],
         ),
+        .library(
+            name: "Libmapper", 
+            targets: ["libmapper"]
+        )
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
