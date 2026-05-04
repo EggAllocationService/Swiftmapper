@@ -17,19 +17,25 @@ public protocol MapperObject {
 }
 
 extension MapperObject {
-    public func getProperty<T: MapperType>(withId: MapperNamedProperty) -> T {
+    public func getProperty<T: MapperType>(withId: MapperNamedProperty) -> T? {
         var ptr: UnsafeRawPointer? = nil;
         var length: Int32 = 1;
         mpr_obj_get_prop_by_idx(getHandle(), withId.rawValue, nil, &length, nil, &ptr, nil);
+        if ptr == nil {
+            return nil;
+        }
 
         return T.fromRawPointer(ptr: ptr!, length: Int(length));
     }
 
-    public func getProperty<T: MapperType>(withName: String) -> T {
+    public func getProperty<T: MapperType>(withName: String) -> T? {
         return withName.withCString { str in 
             var ptr: UnsafeRawPointer? = nil;
             var length: Int32 = 1;
             mpr_obj_get_prop_by_key(getHandle(), str, &length, nil, &ptr, nil);
+            if ptr == nil {
+                return nil;
+            }
 
             return T.fromRawPointer(ptr: ptr!, length: Int(length));
         }

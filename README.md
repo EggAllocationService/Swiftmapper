@@ -34,3 +34,31 @@ signal.setValue(13);
 let signal: MapperSignal<[Float]> = device.createSignal("My Signal", .Out, length: 3);
 signal.setValue([1.2, 2.3, 3.4];)
 ```
+
+### Setting object properties
+```swift
+let device = MapperDevice("Swift Device");
+
+// set the name to something else
+device.setProperty(withId: .Name, to: "Other Name");
+
+// set a custom property
+device.setProperty(withName: "color.hue", to: 0.35);
+
+// set a signal's max value
+let signal: MapperSignal<Float> = device.createSignal("My Signal", .Out);
+signal.setProperty(withId: .Max, to: 100.0)
+```
+
+### Getting object properties
+```swift
+func getDeviceName(dev: MapperDevice) -> String {
+    return dev.getProperty(withId: .Name) ?? "Unknown Name";
+}
+
+func isDeviceHueValid(dev: MapperDevice) -> Bool {
+    let hue: Float? = dev.getProperty(withName: "color.hue");
+
+    return hue != nil && hue! > 0.0 && hue! < 1.0;
+}
+```
