@@ -1,6 +1,6 @@
 import libmapper
 
-public class MapperDevice {
+public class MapperDevice: MapperObject {
     private var handle: mpr_dev
 
     deinit {
@@ -29,5 +29,9 @@ public class MapperDevice {
         get {
             mpr_dev_get_is_ready(handle) != 0
         }
+    }
+
+    public func getHandle() -> mpr_obj {
+        return handle;
     }
 }

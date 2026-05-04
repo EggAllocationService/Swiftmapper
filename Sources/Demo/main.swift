@@ -18,9 +18,12 @@ let inSignal: MapperSignal<[Float]> = device.createSignal("Input float", .In, le
 let start = Date.now;
 
 while true {
-    device.poll(block_for: 10);
+    device.poll(andBlockFor: 10);
 
     let diff = Float(Date.now.timeIntervalSince(start));
+
+    let hue = modf(Float64(diff * 180) / 360)
+    device.setProperty(withName: "color.hue", to: hue.1)
     
     signal.setValue(new_value: [sin(diff), cos(diff)]);
 

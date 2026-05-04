@@ -18,7 +18,7 @@ public extension MapperType {
 }
 
 // Blanket implementation for arrays of mappable types
-extension Array: MappableType, MapperType where Element: MapperType & Copyable {
+extension Array: MappableType, MapperType where Element: MappableType & Copyable {
     public static func asMapperType() -> mpr_type {
         return Element.asMapperType();
     }
@@ -79,5 +79,21 @@ extension Float64: MappableType {
 
     public mutating func withUnsafeRawPointer(body: (UnsafeRawPointer) -> ()) {
         body(&self);
+    }
+}
+
+extension String: MapperType {
+    public static func asMapperType() -> mpr_type {
+        return .init(UInt8(MPR_STR));
+    }
+
+    public mutating func withUnsafeRawPointer(body: (UnsafeRawPointer) -> ()) {
+        self.withCString { ptr in 
+            body(ptr)
+        }
+    }
+
+    public static func fromRawPointer(ptr: UnsafeRawPointer, length: Int) -> String {
+        return String(cString: ptr.assumingMemoryBound(to: CChar.self))
     }
 }
