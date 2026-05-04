@@ -20,4 +20,12 @@ public class Signal<T: MappableType> {
             mpr_sig_free(handle)
         }
     }
+
+    public func setValue(new_value: T) {
+        var val = new_value;
+
+        val.withUnsafeRawPointer {ptr in 
+            mpr_sig_set_value(handle, 0, new_value.length(), T.asMappableType(), ptr)
+        }
+    }
 }

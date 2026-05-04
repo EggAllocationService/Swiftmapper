@@ -3,7 +3,9 @@ import libmapper
 public protocol MappableType {
     static func asMappableType() -> mpr_type
 
-    func length() -> UInt32
+    func length() -> Int32
+
+    mutating func withUnsafeRawPointer(body: (UnsafeRawPointer) -> ()); 
 }
 
 
@@ -12,8 +14,12 @@ extension Int32: MappableType {
         return .init(UInt8(MPR_INT32));
     }
 
-    public func length() -> UInt32 {
+    public func length() -> Int32 {
         return 1
+    }
+
+    public mutating func withUnsafeRawPointer(body: (UnsafeRawPointer) -> ()) {
+        body(&self);
     }
 }
 
@@ -22,8 +28,12 @@ extension Float32: MappableType {
         return .init(UInt8(MPR_FLT));
     }
     
-    public func length() -> UInt32 {
+    public func length() -> Int32 {
         return 1
+    }
+
+    public mutating func withUnsafeRawPointer(body: (UnsafeRawPointer) -> ()) {
+        body(&self);
     }
 }
 
@@ -32,8 +42,12 @@ extension Float64: MappableType {
         return .init(UInt8(MPR_DBL))
     }
 
-    public func length() -> UInt32 {
+    public func length() -> Int32 {
         return 1
+    }
+
+    public mutating func withUnsafeRawPointer(body: (UnsafeRawPointer) -> ()) {
+        body(&self);
     }
 }
 
@@ -42,7 +56,13 @@ extension [Int32]: MappableType {
         return .init(UInt8(MPR_INT32));
     }
 
-    public func length() -> UInt32 {
-        return UInt32(self.count)
+    public func length() -> Int32 {
+        return Int32(self.count)
+    }
+
+    public mutating func withUnsafeRawPointer(body: (UnsafeRawPointer) -> ()) {
+        self.withUnsafeBytes {ptr in 
+            body(ptr.baseAddress!);
+        }
     }
 }
