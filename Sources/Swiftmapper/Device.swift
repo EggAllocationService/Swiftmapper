@@ -13,8 +13,8 @@ public class MapperDevice {
         }
     }
 
-    public func poll(block_for: Int32? = nil) {
-        mpr_dev_poll(handle, block_for ?? -1);
+    public func poll(andBlockFor: Int32? = nil) {
+        mpr_dev_poll(handle, andBlockFor ?? -1);
     }
 
     public func createSignal<T: MappableType>(_ name: String, _ direction: MapperSignalDirection, length: Int = 1) -> MapperSignal<T> {
