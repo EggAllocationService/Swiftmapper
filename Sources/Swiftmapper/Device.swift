@@ -3,20 +3,26 @@ import libmapper
 public class MapperDevice {
     private var handle: mpr_dev
 
+    deinit {
+        mpr_dev_free(handle);
+    }
+
     public init(_ name: String) {    
         handle = name.withCString { ptr in
-            return mpr_dev_new(ptr, nil)
+            return mpr_dev_new(ptr, nil);
         }
     }
 
-    public func poll() {
-        mpr_dev_poll(handle, 10)
+    public func poll(block_for: Int32? = nil) {
+        mpr_dev_poll(handle, block_for ?? -1);
     }
 
-    public func createSignal(_ name: String) {
-        name.withCString { ptr in
-            mpr_sig_new(handle, MPR_DIR_OUT, ptr, 1, 0x69, nil, nil, nil, nil, nil, 0)
-        }
+    public func createSignal<T: MappableType>(_ name: String, _ direction: MapperSignalDirection) -> Signal<T> {
+        let handle: mpr_sig! = name.withCString { ptr in
+            return mpr_sig_new(handle, .init(direction.rawValue), ptr, 1, T.asMappableType(), nil, nil, nil, nil, nil, 0)
+        };
+
+        return Signal<T>(handle: handle, owned: true)
     }
 
     public var ready: Bool {

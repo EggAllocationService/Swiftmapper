@@ -12,7 +12,7 @@ while true {
 
 print("Device is ready!")
 
-device.createSignal("TestSignal")
+let signal = device.createSignal<Float>("Test float signal", .Out);
 
 while true {
     device.poll()
