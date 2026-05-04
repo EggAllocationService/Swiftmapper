@@ -41,7 +41,25 @@ public class MapperSignal<T: MappableType>: MapperObject {
         return T.fromRawPointer(ptr: val!, length: length);
     }
 
+    public func getStatus() -> SignalStatus {
+        let value: Int32 = mpr_sig_get_inst_status(handle, 0, 1)
+        return SignalStatus(rawValue: UInt32(value))
+    }
+
     public func getHandle() -> mpr_obj {
         return handle;
     }
+}
+
+public struct SignalStatus: OptionSet, Sendable {
+    public let rawValue: UInt32
+    public init(rawValue: UInt32) {
+        self.rawValue = rawValue;
+    }
+
+    public static let setRemote = SignalStatus(rawValue: MPR_STATUS_UPDATE_REM.rawValue)
+    public static let setLocal = SignalStatus(rawValue: MPR_STATUS_UPDATE_LOC.rawValue)
+    public static let hasValue = SignalStatus(rawValue: MPR_STATUS_HAS_VALUE.rawValue)
+    public static let isActive = SignalStatus(rawValue: MPR_STATUS_ACTIVE.rawValue)
+    public static let newValue = SignalStatus(rawValue: MPR_STATUS_NEW_VALUE.rawValue)
 }

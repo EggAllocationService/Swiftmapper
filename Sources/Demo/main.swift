@@ -26,10 +26,9 @@ while true {
     device.setProperty(withName: "color.hue", to: hue.1)
     
     signal.setValue(new_value: [sin(diff), cos(diff)]);
-
-    let val = inSignal.getValue();
-
-    if val != nil {
+    let status = inSignal.getStatus();
+    if status.contains(.setRemote) {
+        let val = inSignal.getValue();
         print(val!);
     }
 }

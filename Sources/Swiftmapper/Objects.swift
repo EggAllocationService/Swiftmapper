@@ -1,15 +1,15 @@
 import libmapper
 
-
 public enum MapperNamedProperty: Int32 {
     case Ephemeral = 0x0500
     case Muted = 0x1000
     case Max = 0x0E00
     case Min = 0x0F00
+    case Unit = 0x2500
     case Length = 0x0B00
     case Name = 0x1100
-
-
+    case Status = 0x2100
+    case Id = 0x0800
 }
 
 public protocol MapperObject {
