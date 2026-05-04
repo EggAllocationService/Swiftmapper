@@ -1,14 +1,18 @@
 import Swiftmapper
 import Foundation
 
-let device = MapperDevice("Swift Device");
+let graph = MapperGraph()
+
+let device = MapperDevice("Swift Device", withGraph: graph);
 
 while true {
-    device.poll()
+    graph.poll()
     if device.ready {
         break;
     }
 }
+
+print("Network interface: " + graph.getInterface())
 
 print("Device is ready!")
 
@@ -18,7 +22,7 @@ let inSignal: MapperSignal<[Float]> = device.createSignal("Input float", .In, le
 let start = Date.now;
 
 while true {
-    device.poll(andBlockFor: 10);
+    graph.poll(andBlockFor: 10);
 
     let diff = Float(Date.now.timeIntervalSince(start));
 
