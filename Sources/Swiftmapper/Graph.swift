@@ -1,6 +1,6 @@
 import libmapper
 
-public class MapperGraph {
+public class MapperGraph: MapperObject {
     internal private(set) var handle: mpr_graph
     public init() {
         handle = mpr_graph_new(0);
@@ -8,5 +8,9 @@ public class MapperGraph {
 
     deinit {
         mpr_graph_free(handle);
+    }
+
+    public func getHandle() -> mpr_obj {
+        return handle;
     }
 }

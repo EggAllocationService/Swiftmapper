@@ -5,7 +5,7 @@ public enum MapperSignalDirection: UInt32 {
     case Out = 0x02
 }
 
-public class MapperSignal<T: MappableType> {
+public class MapperSignal<T: MappableType>: MapperObject {
     private var handle: mpr_sig;
     private var owned: Bool;
 
@@ -37,5 +37,9 @@ public class MapperSignal<T: MappableType> {
             return nil;
         }
         return T.fromRawPointer(ptr: val!, length: length);
+    }
+
+    public func getHandle() -> mpr_obj {
+        return handle;
     }
 }
