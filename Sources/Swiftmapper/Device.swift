@@ -17,12 +17,12 @@ public class MapperDevice {
         mpr_dev_poll(handle, block_for ?? -1);
     }
 
-    public func createSignal<T: MappableType>(_ name: String, _ direction: MapperSignalDirection, length: Int = 1) -> Signal<T> {
+    public func createSignal<T: MappableType>(_ name: String, _ direction: MapperSignalDirection, length: Int = 1) -> MapperSignal<T> {
         let sig_handle: mpr_sig = name.withCString { ptr in
             return mpr_sig_new(self.handle, .init(direction.rawValue), ptr, Int32(length), T.asMapperType(), nil, nil, nil, nil, nil, 0)
         };
 
-        return Signal<T>(handle: sig_handle, owned: true, length: length);
+        return MapperSignal<T>(handle: sig_handle, owned: true, length: length);
     }
 
     public var ready: Bool {

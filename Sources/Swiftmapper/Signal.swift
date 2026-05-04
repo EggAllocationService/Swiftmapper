@@ -5,8 +5,7 @@ public enum MapperSignalDirection: UInt32 {
     case Out = 0x02
 }
 
-
-public class Signal<T: MappableType> {
+public class MapperSignal<T: MappableType> {
     private var handle: mpr_sig;
     private var owned: Bool;
 

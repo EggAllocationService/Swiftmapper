@@ -12,8 +12,8 @@ while true {
 
 print("Device is ready!")
 
-let signal: Signal<[Float]> = device.createSignal("Test float signal", .Out, length: 2);
-let inSignal: Signal<[Float]> = device.createSignal("Input float", .In, length: 2);
+let signal: MapperSignal<[Float]> = device.createSignal("Test float signal", .Out, length: 2);
+let inSignal: MapperSignal<[Float]> = device.createSignal("Input float", .In, length: 2);
 
 let start = Date.now;
 
