@@ -10,9 +10,12 @@ public class Signal<T: MappableType> {
     private var handle: mpr_sig;
     private var owned: Bool;
 
-    init(handle: mpr_sig, owned: Bool) {
+    public private(set) var length: Int;
+
+    init(handle: mpr_sig, owned: Bool, length: Int) {
         self.handle = handle;
         self.owned = owned;
+        self.length = length;
     }
 
     deinit {
@@ -25,7 +28,15 @@ public class Signal<T: MappableType> {
         var val = new_value;
 
         val.withUnsafeRawPointer {ptr in 
-            mpr_sig_set_value(handle, 0, new_value.length(), T.asMappableType(), ptr)
+            mpr_sig_set_value(handle, 0, new_value.length(), T.asMapperType(), ptr)
         }
+    }
+
+    public func getValue() -> T? {
+        let val = mpr_sig_get_value(handle, 0, UnsafeMutablePointer.init(bitPattern: 0));
+        if val == nil {
+            return nil;
+        }
+        return T.fromRawPointer(ptr: val!, length: length);
     }
 }

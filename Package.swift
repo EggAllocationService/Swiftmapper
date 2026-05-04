@@ -5,11 +5,14 @@ import PackageDescription
 
 let package = Package(
     name: "Swiftmapper",
+    platforms: [
+        .macOS(.v12)
+    ],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "Swiftmapper",
-            targets: ["Swiftmapper"]
+            targets: ["Swiftmapper"],
         ),
     ],
     targets: [

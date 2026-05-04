@@ -1,16 +1,47 @@
 import libmapper
 
-public protocol MappableType {
-    static func asMappableType() -> mpr_type
-
-    func length() -> Int32
-
+public protocol MapperType {
+    static func asMapperType() -> mpr_type
+    static func fromRawPointer(ptr: UnsafeRawPointer, length: Int) -> Self;
     mutating func withUnsafeRawPointer(body: (UnsafeRawPointer) -> ()); 
 }
 
+public protocol MappableType: MapperType {
+    func length() -> Int32;
+}
+
+public extension MapperType {
+    // Simple types can be read directly from the pointer. Must override for complex types like arrays
+    static func fromRawPointer(ptr: UnsafeRawPointer, length: Int) -> Self {
+        return ptr.load(as: Self.self);
+    }
+}
+
+// Blanket implementation for arrays of mappable types
+extension Array: MappableType, MapperType where Element: MapperType & Copyable {
+    public static func asMapperType() -> mpr_type {
+        return Element.asMapperType();
+    }
+
+    public static func fromRawPointer(ptr: UnsafeRawPointer, length: Int) -> Array<Element> {
+        let typedPtr: UnsafePointer<Element> = ptr.bindMemory(to: Element.self, capacity: MemoryLayout<Element>.size * length);
+        let buf = UnsafeBufferPointer(start: typedPtr, count: length)
+        return Array(buf);
+    }
+
+    public func length() -> Int32 {
+        return Int32(self.count)
+    }
+
+    public mutating func withUnsafeRawPointer(body: (UnsafeRawPointer) -> ()) {
+        self.withUnsafeBytes {ptr in 
+            body(ptr.baseAddress!);
+        }
+    }
+}
 
 extension Int32: MappableType {
-    public static func asMappableType() -> mpr_type {
+    public static func asMapperType() -> mpr_type {
         return .init(UInt8(MPR_INT32));
     }
 
@@ -24,7 +55,7 @@ extension Int32: MappableType {
 }
 
 extension Float32: MappableType {
-    public static func asMappableType() -> mpr_type {
+    public static func asMapperType() -> mpr_type {
         return .init(UInt8(MPR_FLT));
     }
     
@@ -38,7 +69,7 @@ extension Float32: MappableType {
 }
 
 extension Float64: MappableType {
-    public static func asMappableType() -> mpr_type {
+    public static func asMapperType() -> mpr_type {
         return .init(UInt8(MPR_DBL))
     }
 
@@ -48,21 +79,5 @@ extension Float64: MappableType {
 
     public mutating func withUnsafeRawPointer(body: (UnsafeRawPointer) -> ()) {
         body(&self);
-    }
-}
-
-extension [Int32]: MappableType {
-    public static func asMappableType() -> mpr_type {
-        return .init(UInt8(MPR_INT32));
-    }
-
-    public func length() -> Int32 {
-        return Int32(self.count)
-    }
-
-    public mutating func withUnsafeRawPointer(body: (UnsafeRawPointer) -> ()) {
-        self.withUnsafeBytes {ptr in 
-            body(ptr.baseAddress!);
-        }
     }
 }
