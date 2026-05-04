@@ -62,3 +62,13 @@ func isDeviceHueValid(dev: MapperDevice) -> Bool {
     return hue != nil && hue! > 0.0 && hue! < 1.0;
 }
 ```
+
+### Instances
+
+```swift
+// create signal with instances
+let signal: MapperSignal<Float> = device.createSignal("Test", .Out, withInstances: 10);
+signal.setValue(10.1, onInstance: 1);
+print(signal.getValue(fromInstance: 1)) // 10.1
+
+```
