@@ -7,9 +7,9 @@ public class MapperDevice {
         mpr_dev_free(handle);
     }
 
-    public init(_ name: String) {    
+    public init(_ name: String, withGraph: MapperGraph? = nil) {    
         handle = name.withCString { ptr in
-            return mpr_dev_new(ptr, nil);
+            return mpr_dev_new(ptr, withGraph?.handle);
         }
     }
 
