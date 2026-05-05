@@ -1,12 +1,16 @@
 import libmapper 
 
+internal protocol GenericSignal {
+    var handle: mpr_sig {get}
+}
+
 public enum MapperSignalDirection: UInt32 {
     case In = 0x01
     case Out = 0x02
 }
 
-public class MapperSignal<T: MappableType>: MapperObject {
-    private var handle: mpr_sig;
+public class MapperSignal<T: MappableType>: MapperObject, GenericSignal {
+    internal private(set) var handle: mpr_sig;
     private var owned: Bool;
 
     public private(set) var length: Int;

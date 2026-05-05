@@ -10,6 +10,7 @@ public enum MapperNamedProperty: Int32 {
     case Name = 0x1100
     case Status = 0x2100
     case Id = 0x0800
+    case Expression = 0x0600
 }
 
 public protocol MapperObject {
