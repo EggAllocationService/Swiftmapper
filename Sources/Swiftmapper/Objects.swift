@@ -59,4 +59,8 @@ extension MapperObject {
             }
         }
     }
+
+    public func push() {
+        mpr_obj_push(getHandle());
+    }
 }
