@@ -5,6 +5,8 @@ let graph = MapperGraph()
 
 let device = MapperDevice("Swift Device", withGraph: graph);
 
+graph.subscribe(to: [.devices])
+
 while true {
     graph.poll()
     if device.ready {
@@ -15,6 +17,13 @@ while true {
 print("Network interface: " + graph.getInterface())
 
 print("Device is ready!")
+
+let devices = graph.getDevices();
+print("\(devices.count) Devices: ")
+for dev in devices {
+    let name: String = dev.getProperty(withId: .Name)!;
+    print("\t" + name)
+}
 
 let signal: MapperSignal<[Float]> = device.createSignal("Test float signal", .Out, length: 2);
 let inSignal: MapperSignal<[Float]> = device.createSignal("Input float", .In, length: 2);

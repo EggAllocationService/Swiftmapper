@@ -2,15 +2,25 @@ import libmapper
 
 public class MapperDevice: MapperObject {
     private var handle: mpr_dev
+    public private(set) var owned: Bool;
 
     deinit {
-        mpr_dev_free(handle);
+        if (owned) {
+            mpr_dev_free(handle);
+        }
     }
 
     public init(_ name: String, withGraph: MapperGraph? = nil) {    
         handle = name.withCString { ptr in
             return mpr_dev_new(ptr, withGraph?.handle);
         }
+
+        owned = true;
+    }
+
+    internal init(handle: mpr_dev) {
+        self.handle = handle;
+        owned = false;
     }
 
     public func poll(andBlockFor: Int32? = nil) {
