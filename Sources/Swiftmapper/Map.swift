@@ -1,13 +1,13 @@
 import libmapper
 
-class MapperMap {
+public class MapperMap {
     private var handle: mpr_map
     private var owned: Bool
 
     /// Create a map from a signal to another one
     public init(from: GenericSignal, to: GenericSignal) {
-        var fromHandle: mpr_sig? = from.handle;
-        var toHandle: mpr_sig? = to.handle;
+        var fromHandle: mpr_sig? = from.getHandle();
+        var toHandle: mpr_sig? = to.getHandle();
         handle = mpr_map_new(1, &fromHandle, 1, &toHandle);
         mpr_obj_push(self.handle)
 
@@ -16,8 +16,8 @@ class MapperMap {
 
     /// Create a many-to-one map
     public init(from: [GenericSignal], to: GenericSignal) {
-        let fromHandles: [mpr_sig?] = from.map {$0.handle}
-        var toHandle: mpr_sig? = to.handle;
+        let fromHandles: [mpr_sig?] = from.map {$0.getHandle()}
+        var toHandle: mpr_sig? = to.getHandle();
         handle = fromHandles.withUnsafeBufferPointer {fromPtr in 
             mpr_map_new(Int32(from.count), UnsafeMutablePointer(mutating: fromPtr.baseAddress!), 1, &toHandle)
         }

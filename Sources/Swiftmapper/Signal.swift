@@ -1,7 +1,7 @@
 import libmapper 
 
-internal protocol GenericSignal {
-    var handle: mpr_sig {get}
+public protocol GenericSignal: MapperObject {
+    func getStatus(forInstance: UInt64?) -> SignalStatus
 }
 
 public enum MapperSignalDirection: UInt32 {
@@ -45,13 +45,38 @@ public class MapperSignal<T: MappableType>: MapperObject, GenericSignal {
         return T.fromRawPointer(ptr: val!, length: length);
     }
 
-    public func getStatus(forInstance: UInt64 = 0) -> SignalStatus {
-        let value: Int32 = mpr_sig_get_inst_status(handle, forInstance, 1)
+    public func getStatus(forInstance: UInt64? = nil) -> SignalStatus {
+        let value: Int32 = mpr_sig_get_inst_status(handle, forInstance ?? 0, 1)
         return SignalStatus(rawValue: UInt32(value))
     }
 
     public func getHandle() -> mpr_obj {
         return handle;
+    }
+}
+
+/// This class wraps signals returned from internal libmapper API calls
+/// Since we don't know the type, or there could be signals of mixed types, we cannot return a list of generic instantiations
+public class UnknownSignal : GenericSignal {
+    private var handle: mpr_sig;
+
+    internal init(handle: mpr_sig) {
+        self.handle = handle;
+    }
+
+    public func getHandle() -> mpr_obj {
+        return handle;
+    }
+
+    public func getStatus(forInstance: UInt64?) -> SignalStatus {
+        let value: Int32 = mpr_sig_get_inst_status(handle, forInstance ?? 0, 1)
+        return SignalStatus(rawValue: UInt32(value))
+    }
+
+    public func wrap<T>() -> MapperSignal<T> {
+        let length: Int32 = getProperty(withId: .Length)!;
+        let instances: Int32 = getProperty(withId: .NumInstances)!;
+        return MapperSignal(handle: handle, owned: false, length: Int(length), instances: Int(instances));
     }
 }
 

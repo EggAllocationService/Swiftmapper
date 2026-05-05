@@ -45,4 +45,12 @@ public class MapperDevice: MapperObject {
     public func getHandle() -> mpr_obj {
         return handle;
     }
+
+    public func getSignals(inDirection: MapperSignalDirection? = nil) -> [UnknownSignal] {
+        let list = mpr_dev_get_sigs(handle, .init(inDirection?.rawValue ?? MPR_DIR_ANY.rawValue))
+
+        return readLibmapperList(list: list) {
+            UnknownSignal(handle: $0)
+        }
+    }
 }
