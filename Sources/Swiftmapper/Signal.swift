@@ -41,8 +41,8 @@ public class MapperSignal<T: MappableType>: MapperObject {
         return T.fromRawPointer(ptr: val!, length: length);
     }
 
-    public func getStatus() -> SignalStatus {
-        let value: Int32 = mpr_sig_get_inst_status(handle, 0, 1)
+    public func getStatus(forInstance: UInt64 = 0) -> SignalStatus {
+        let value: Int32 = mpr_sig_get_inst_status(handle, forInstance, 1)
         return SignalStatus(rawValue: UInt32(value))
     }
 
