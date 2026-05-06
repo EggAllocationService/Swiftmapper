@@ -27,10 +27,14 @@ public class MapperDevice: MapperObject {
         mpr_dev_poll(handle, andBlockFor ?? -1);
     }
 
-    public func createSignal<T: MappableType>(_ name: String, _ direction: MapperSignalDirection, length: Int = 1, withInstances: Int = 1) -> MapperSignal<T> {
+    public func createSignal<T: MappableType>(_ name: String, _ direction: MapperSignalDirection, length: Int = 1, withInstances: Int = 0) -> MapperSignal<T> {
         let sig_handle: mpr_sig = name.withCString { ptr in
             var instances = Int32(withInstances)
-            return mpr_sig_new(self.handle, .init(direction.rawValue), ptr, Int32(length), T.asMapperType(), nil, nil, nil, &instances, nil, 0)
+            if instances == 0 {
+                return mpr_sig_new(self.handle, .init(direction.rawValue), ptr, Int32(length), T.asMapperType(), nil, nil, nil, nil, nil, 0)
+            } else {
+                return mpr_sig_new(self.handle, .init(direction.rawValue), ptr, Int32(length), T.asMapperType(), nil, nil, nil, &instances, nil, 0)
+            }
         };
 
         return MapperSignal<T>(handle: sig_handle, owned: true, length: length, instances: withInstances);
