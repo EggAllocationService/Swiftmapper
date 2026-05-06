@@ -51,12 +51,16 @@ public class MapperGraph: MapperObject {
     public func getDevices() -> [MapperDevice] {
         let ptr = mpr_graph_get_list(self.handle, Int32(MPR_DEV));
 
-        if (ptr == nil) {
-            return []
-        }
-
         return readLibmapperList(list: ptr!) {
             MapperDevice(handle: $0)
+        }
+    }
+
+    public func getMaps() -> [MapperMap] {
+        let ptr = mpr_graph_get_list(self.handle, Int32(MPR_MAP))
+
+        return readLibmapperList(list: ptr) {
+            MapperMap(withHandle: $0)
         }
     }
 }

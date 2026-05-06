@@ -19,44 +19,43 @@ print("Device is ready!")
 
 graph.poll(andBlockFor: 100)
 
-let devices = graph.getDevices();
-print("\(devices.count) Devices: ")
-var targetDevice: MapperDevice? = nil;
-for dev in devices {
-    let name: String = dev.getProperty(withId: .Name)!;
-    print("\t" + name)
-    if name == "mathr.1" {
-        targetDevice = dev;
-    }
+for i in 0..<10 {
+    graph.poll(andBlockFor:10);
 }
-let signals = targetDevice!.getSignals();
-var targetSignal = signals.first!;
 
-let signal: MapperSignal<[Float]> = device.createSignal("Test float signal", .Out, length: 2);
-let inSignal: MapperSignal<Float> = device.createSignal("Input float", .In);
-let map = MapperMap(from: targetSignal, to: inSignal);
-while true {
-    graph.poll(andBlockFor: 10)
-    if map.ready {
-        print("Map ready!")
-        break;
+var maps = graph.getMaps();
+print("\(maps.count) Maps:")
+for map in maps {
+    let (srcs, dst) = map.getSignals();
+
+    let names: [String] = srcs.map {
+        $0.getProperty(withId: .Name)!
     }
+    let dstName: String = dst.getProperty(withId: .Name)!;
+
+    print("\t \(names) -> \(dstName)");
+    
+    let expr: String? = map.getProperty(withId: .Expression);
+    print("\t\tExpression: \(expr ?? "nil")")
 }
+
+let signal: MapperSignal<[Float]> = device.createSignal("Test_float_signal", .Out, length: 2);
+let inSignal: MapperSignal<Float> = device.createSignal("Input_float", .In);
 
 let start = Date.now;
 
 while true {
     graph.poll(andBlockFor: 10);
-    device.poll()
 
     let diff = Float(Date.now.timeIntervalSince(start));
 
-    let hue = modf(Float64(diff * 180) / 360)
-    device.setProperty(withName: "color.hue", to: hue.1)
+    //let hue = modf(Float64(diff * 180) / 360)
+    //device.setProperty(withName: "color.hue", to: hue.1)
+    //device.push();
     
     signal.setValue(new_value: [sin(diff), cos(diff)]);
     let status = inSignal.getStatus();
-    if status.contains(.newValue) {
+    if status.contains(.setRemote) {
         let val = inSignal.getValue();
         print(val!);
     }

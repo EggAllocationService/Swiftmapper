@@ -1,6 +1,6 @@
 import libmapper
 
-public class MapperMap {
+public class MapperMap: MapperObject {
     private var handle: mpr_map
     private var owned: Bool
 
@@ -52,5 +52,20 @@ public class MapperMap {
     /// Takes ownership of this map, so that when the Swift object is garbage-collected the underlying map will be destroyed
     public func take() {
         owned = true;
+    }
+
+    public func getHandle() -> mpr_obj {
+        return handle;
+    }
+
+    /// Returns the list of source signals and the destination signal for this map
+    public func getSignals() -> ([UnknownSignal], UnknownSignal) {
+        let fromList = mpr_map_get_sigs(handle, MPR_LOC_SRC);
+        let toList = mpr_map_get_sigs(handle, MPR_LOC_DST);
+
+        return (
+            readLibmapperList(list: fromList) {UnknownSignal(handle: $0)},
+            UnknownSignal(handle: toList!.pointee!)
+        )
     }
 }
