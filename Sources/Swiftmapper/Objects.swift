@@ -14,22 +14,36 @@ public enum MapperNamedProperty: Int32 {
     case NumInstances = 0x1200
 }
 
+/// Common interface for Libmapper object wrappers
 public protocol MapperObject {
+    /// Get the raw libmapper handle
+    /// 
+    /// Useful in case you need to work with the api directly while still 
     func getHandle() -> mpr_obj;
 }
 
 extension MapperObject {
+    /// Get the value of a libmapper object property
+    /// - Parameter withId: An identifier for a specific named property
+    /// - Returns: The value of the property, or nil if it does not exist or the type is mismatched
     public func getProperty<T: MapperType>(withId: MapperNamedProperty) -> T? {
         var ptr: UnsafeRawPointer? = nil;
+        var type: mpr_type = .init();
         var length: Int32 = 1;
-        mpr_obj_get_prop_by_idx(getHandle(), withId.rawValue, nil, &length, nil, &ptr, nil);
+        mpr_obj_get_prop_by_idx(getHandle(), withId.rawValue, nil, &length, &type, &ptr, nil);
         if ptr == nil {
+            return nil;
+        }
+        if type != T.asMapperType() {
             return nil;
         }
 
         return T.fromRawPointer(ptr: ptr!, length: Int(length));
     }
 
+    /// Get the value of a libmapper object property
+    /// - Parameter withName: The string identifier of a custom property 
+    /// - Returns: The value of the property, or nil if it does not exist or the type is mismatched
     public func getProperty<T: MapperType>(withName: String) -> T? {
         return withName.withCString { str in 
             var ptr: UnsafeRawPointer? = nil;
@@ -43,6 +57,11 @@ extension MapperObject {
         }
     }
 
+    /// Set the value of a libmapper object property
+    /// - Parameters:
+    ///   - withId: An identifier for a specific named property
+    ///   - to: The new value
+    ///   - publish: Whether this value should be replicated to other devices
     public func setProperty<T: MappableType>(withId: MapperNamedProperty, to: T, publish: Bool = true) {
         var copy = to;
         copy.withUnsafeRawPointer { ptr in 
@@ -50,6 +69,11 @@ extension MapperObject {
         }
     }
 
+    /// Set the value of a libmapper object property
+    /// - Parameters:
+    ///   - withName: The string identifier of a custom property 
+    ///   - to: The new value
+    ///   - publish: Whether this value should be replicated to other devices
     public func setProperty<T: MappableType>(withName: String, to: T, publish: Bool = true) {
         var copy = to;
         copy.withUnsafeRawPointer { ptr in 
@@ -60,6 +84,7 @@ extension MapperObject {
         }
     }
 
+    /// Push this object and its properties to the distributed graph
     public func push() {
         mpr_obj_push(getHandle());
     }

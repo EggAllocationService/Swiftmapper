@@ -29,11 +29,11 @@ public class MapperSignal<T: MappableType>: MapperObject, GenericSignal {
         }
     }
 
-    public func setValue(new_value: T, onInstance: UInt64 = 0) {
-        var val = new_value;
+    public func setValue(to: T, onInstance: UInt64 = 0) {
+        var val = to;
 
         val.withUnsafeRawPointer {ptr in 
-            mpr_sig_set_value(handle, onInstance, new_value.length(), T.asMapperType(), ptr)
+            mpr_sig_set_value(handle, onInstance, to.length(), T.asMapperType(), ptr)
         }
     }
 
@@ -55,7 +55,8 @@ public class MapperSignal<T: MappableType>: MapperObject, GenericSignal {
     }
 }
 
-/// This class wraps signals returned from internal libmapper API calls
+/// Wraps signals returned from internal libmapper API calls
+/// 
 /// Since we don't know the type, or there could be signals of mixed types, we cannot return a list of generic instantiations
 public class UnknownSignal : GenericSignal {
     private var handle: mpr_sig;
