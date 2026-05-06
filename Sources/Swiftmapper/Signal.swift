@@ -1,6 +1,10 @@
 import libmapper 
 
 public protocol GenericSignal: MapperObject {
+
+    /// Get the signal status flags
+    /// 
+    /// - Parameter forInstance: The instance to get flag information for, or nil for the default
     func getStatus(forInstance: UInt64?) -> SignalStatus
 }
 
@@ -9,11 +13,16 @@ public enum MapperSignalDirection: UInt32 {
     case Out = 0x02
 }
 
+
+/// A strongly typed signal wrapper
 public class MapperSignal<T: MappableType>: MapperObject, GenericSignal {
     internal private(set) var handle: mpr_sig;
     private var owned: Bool;
 
+    /// Vector length
     public private(set) var length: Int;
+
+    /// Number of instances
     public private(set) var instances: Int; 
 
     init(handle: mpr_sig, owned: Bool, length: Int, instances: Int) {
@@ -29,6 +38,11 @@ public class MapperSignal<T: MappableType>: MapperObject, GenericSignal {
         }
     }
 
+    /// Update the signal value
+    ///
+    /// - Parameters:
+    ///   - to: the new value
+    ///   - onInstance: the instance number to update, or 0 for the default instance
     public func setValue(to: T, onInstance: UInt64 = 0) {
         var val = to;
 
@@ -37,6 +51,11 @@ public class MapperSignal<T: MappableType>: MapperObject, GenericSignal {
         }
     }
 
+    /// Get the current value of the signal
+    /// 
+    /// 
+    /// - Parameter fromInstance: The instance to get the value from, or 0 for the default instance
+    /// - Returns: The current signal value, or nil if there is no value yet
     public func getValue(fromInstance: UInt64 = 0) -> T? {
         let val = mpr_sig_get_value(handle, fromInstance, UnsafeMutablePointer.init(bitPattern: 0));
         if val == nil {
@@ -74,7 +93,11 @@ public class UnknownSignal : GenericSignal {
         return SignalStatus(rawValue: UInt32(value))
     }
 
-    public func wrap<T>() -> MapperSignal<T> {
+    /// Binds this signal to a type
+    /// 
+    /// If you know for certain the type of the `UnknownSignal`, you can convert it to a `MapperSignal<T>` using this method
+    /// - Returns: A strongly typed non-owning wrapper for the same signal handle
+    public func bind<T>() -> MapperSignal<T> {
         let length: Int32 = getProperty(withId: .Length)!;
         let instances: Int32 = getProperty(withId: .NumInstances)!;
         return MapperSignal(handle: handle, owned: false, length: Int(length), instances: Int(instances));
@@ -87,9 +110,18 @@ public struct SignalStatus: OptionSet, Sendable {
         self.rawValue = rawValue;
     }
 
+    /// The signal value was updated remotely since last status check
     public static let setRemote = SignalStatus(rawValue: MPR_STATUS_UPDATE_REM.rawValue)
+
+    /// The signal value was updated locally since last status check
     public static let setLocal = SignalStatus(rawValue: MPR_STATUS_UPDATE_LOC.rawValue)
+
+    /// The signal has had a value set at least once
     public static let hasValue = SignalStatus(rawValue: MPR_STATUS_HAS_VALUE.rawValue)
+
+    /// The signal instance is active
     public static let isActive = SignalStatus(rawValue: MPR_STATUS_ACTIVE.rawValue)
+
+    /// A new value has been set since last status check
     public static let newValue = SignalStatus(rawValue: MPR_STATUS_NEW_VALUE.rawValue)
 }
