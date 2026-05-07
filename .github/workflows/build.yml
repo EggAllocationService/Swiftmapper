@@ -43,7 +43,7 @@ jobs:
           generate-documentation --target Swiftmapper \
           --disable-indexing \
           --transform-for-static-hosting \
-          --hosting-base-path swiftmapper \
+          --hosting-base-path ${{ github.event.repository.name }} \
           --output-path docs
     - name: Upload generated docs as artifact
       id: lib-docs
