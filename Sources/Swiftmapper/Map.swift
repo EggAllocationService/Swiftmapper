@@ -9,7 +9,6 @@ public class MapperMap: MapperObject {
         var fromHandle: mpr_sig? = from.getHandle();
         var toHandle: mpr_sig? = to.getHandle();
         handle = mpr_map_new(1, &fromHandle, 1, &toHandle);
-        mpr_obj_push(self.handle)
 
         owned = true;
     }
