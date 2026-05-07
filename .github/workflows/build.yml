@@ -12,19 +12,20 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: swift:6.3
     steps:
     - uses: actions/checkout@v4
-    - name: install dependencies
+    - name: Install dependencies
       run: |
-        sudo apt-get install g++-9 autoconf-archive curl zlib1g-dev doxygen wget swiftlang
-    - name: install liblo
+        apt update && apt install -y g++-9 autoconf-archive curl zlib1g-dev doxygen wget build-essential
+    - name: Install liblo
       run: |
         curl -L -O https://github.com/radarsat1/liblo/releases/download/0.34/liblo-0.34.tar.gz
         tar -xzf liblo-0.34.tar.gz
         rm liblo-0.34.tar.gz
-        mv liblo-0.34 liblo
-        cd liblo
-        (./configure --host=$HOST --prefix=$PWD/inst --enable-static --disable-shared --disable-tests --disable-tools --disable-examples --disable-doc CFLAGS=-fPIC || (cat config.log; false))
+        cd liblo-0.34
+        (./configure --enable-static --disable-shared --disable-tests --disable-tools --disable-examples --disable-doc CFLAGS=-fPIC || (cat config.log; false))
         make install
         find inst
         cd ..

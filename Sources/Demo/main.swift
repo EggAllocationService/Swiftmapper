@@ -53,7 +53,7 @@ while true {
     //device.setProperty(withName: "color.hue", to: hue.1)
     //device.push();
     
-    signal.setValue(new_value: [sin(diff), cos(diff)]);
+    signal.setValue(to: [sin(diff), cos(diff)]);
     let status = inSignal.getStatus();
     if status.contains(.setRemote) {
         let val = inSignal.getValue();
