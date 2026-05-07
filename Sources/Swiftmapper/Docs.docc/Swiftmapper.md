@@ -19,6 +19,7 @@ A library for connecting things
 - ``UnknownSignal``
 
 ### Maps & Objects
+- <doc:Working-With-Properties>
 - ``MapperMap``
 - ``MapperObject``
 
