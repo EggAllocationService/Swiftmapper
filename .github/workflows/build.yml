@@ -16,6 +16,8 @@ jobs:
       image: swift:6.3
     steps:
     - uses: actions/checkout@v4
+    - name: Setup dependencies
+      run: sudo apt update && sudo apt install liblo wget
     - name: Install Libmapper
       run: wget https://github.com/libmapper/libmapper/releases/download/2.5.2/libmapper-2.5.2.tar.gz && tar -xzf libmapper*.tar.gz && cd libmapper-2.5.2 && ./configure && make -j4 && make install
     - name: Buildcd
