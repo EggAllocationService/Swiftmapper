@@ -12,15 +12,30 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container:
-      image: swift:6.3
     steps:
     - uses: actions/checkout@v4
-    - name: Setup dependencies
-      run: sudo apt update && sudo apt install liblo wget
+    - name: install dependencies
+      run: |
+        sudo apt-get install g++-9 autoconf-archive curl zlib1g-dev doxygen wget swiftlang
+    - name: install liblo
+      run: |
+        curl -L -O https://github.com/radarsat1/liblo/releases/download/0.34/liblo-0.34.tar.gz
+        tar -xzf liblo-0.34.tar.gz
+        rm liblo-0.34.tar.gz
+        mv liblo-0.34 liblo
+        cd liblo
+        (./configure --host=$HOST --prefix=$PWD/inst --enable-static --disable-shared --disable-tests --disable-tools --disable-examples --disable-doc CFLAGS=-fPIC || (cat config.log; false))
+        make install
+        find inst
+        cd ..
     - name: Install Libmapper
-      run: wget https://github.com/libmapper/libmapper/releases/download/2.5.2/libmapper-2.5.2.tar.gz && tar -xzf libmapper*.tar.gz && cd libmapper-2.5.2 && ./configure && make -j4 && make install
-    - name: Buildcd
+      run: | 
+        wget https://github.com/libmapper/libmapper/releases/download/2.5.2/libmapper-2.5.2.tar.gz && tar -xzf libmapper*.tar.gz
+        cd libmapper-2.5.2
+        ./configure --disable-java --disable-python --disable-csharp --disable-audio 
+        make -j4 && make install
+        cd ..
+    - name: Build
       run: swift build -v
     - name: Run tests
       run: swift test -v
