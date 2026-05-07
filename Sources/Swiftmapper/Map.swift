@@ -58,7 +58,7 @@ public class MapperMap: MapperObject {
     }
 
     /// Returns the list of source signals and the destination signal for this map
-    public func getSignals() -> ([UnknownSignal], UnknownSignal) {
+    public func getSignals() -> (srcs: [UnknownSignal], dst: UnknownSignal) {
         let fromList = mpr_map_get_sigs(handle, MPR_LOC_SRC);
         let toList = mpr_map_get_sigs(handle, MPR_LOC_DST);
 
