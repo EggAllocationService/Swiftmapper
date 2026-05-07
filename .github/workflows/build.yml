@@ -27,7 +27,6 @@ jobs:
         cd liblo-0.34
         (./configure --enable-static --disable-shared --disable-tests --disable-tools --disable-examples --disable-doc CFLAGS=-fPIC || (cat config.log; false))
         make install
-        find inst
         cd ..
     - name: Install Libmapper
       run: | 
