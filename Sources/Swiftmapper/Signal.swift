@@ -19,7 +19,7 @@ public extension GenericSignal {
             return nil;
         }
         let len: Int32 = getProperty(withId: .Length)!;
-        let vector = len > 0;
+        let vector = len > 1;
 
         switch Int(mpr!) {
             case MPR_INT32: 

@@ -7,6 +7,8 @@ To create a map, you first need two signal references. Since most of the time yo
 
 To do this, we'll use a ``MapperGraph`` object. We'll also be creating a device, so we can save some memory by letting the device re-use the ``MapperGraph`` for network communication by passing it to ``MapperDevice/init(_:withGraph:)``
 
+Note that it is very important to call ``MapperGraph/subscribe(to:onDevice:)``, as without subscribing to the types you want to query you'll only be able to see local devices and signals.
+
 @Snippet(path: "maps", slice: "init")
 
 > Devices created with a graph should not be polled directly, always poll the ``MapperGraph`` object instead.

@@ -2,6 +2,8 @@ import Swiftmapper
 
 // snippet.init
 let graph = MapperGraph();
+graph.subscribe(to: [.devices, .signals])
+
 let device = MapperDevice("MyDevice", withGraph: graph);
 while !device.ready {
     graph.poll(andBlockFor: 10);
@@ -15,13 +17,17 @@ var targetSignal: GenericSignal? = nil;
 
 // snippet.searchLoop
 for dev in devices {
+    let devName: String = dev.getProperty(withId: .Name)!;
+    print("Searching device " + devName)
     let signals = dev.getSignals(inDirection: .Out);
 
     for sig in signals {
         let type = sig.getSignalType();
         let name: String = sig.getProperty(withId: .Name)!;
 
-        if type == Float.self && name == "expr" {
+        print("\tSearching signal: " + name + " with type " + type.debugDescription);
+
+        if type == Double.self && name == "expr" {
             targetSignal = sig;
             break;
         }
@@ -46,3 +52,12 @@ while !map.ready {
     graph.poll(andBlockFor: 10)
 }
 // map is now established
+// snippet.end
+while true {
+    graph.poll(andBlockFor: 10);
+
+    let flags = signal.getStatus();
+    if flags.contains(.newValue) {
+        print(signal.getValue()!);
+    }
+}
