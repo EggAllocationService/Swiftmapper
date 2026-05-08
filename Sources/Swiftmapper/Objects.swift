@@ -12,6 +12,7 @@ public enum MapperNamedProperty: Int32 {
     case Id = 0x0800
     case Expression = 0x0600
     case NumInstances = 0x1200
+    case MapperType = 0x2400
 }
 
 /// Common interface for Libmapper object wrappers
@@ -62,7 +63,7 @@ extension MapperObject {
     ///   - withId: An identifier for a specific named property
     ///   - to: The new value
     ///   - publish: Whether this value should be replicated to other devices
-    public func setProperty<T: MappableType>(withId: MapperNamedProperty, to: T, publish: Bool = true) {
+    public func setProperty<T: MapperType>(withId: MapperNamedProperty, to: T, publish: Bool = true) {
         var copy = to;
         copy.withUnsafeRawPointer { ptr in 
             mpr_obj_set_prop(getHandle(), .init(UInt32(withId.rawValue)), nil, to.length(), T.asMapperType(), ptr, publish ? 1 : 0)
@@ -74,7 +75,7 @@ extension MapperObject {
     ///   - withName: The string identifier of a custom property 
     ///   - to: The new value
     ///   - publish: Whether this value should be replicated to other devices
-    public func setProperty<T: MappableType>(withName: String, to: T, publish: Bool = true) {
+    public func setProperty<T: MapperType>(withName: String, to: T, publish: Bool = true) {
         var copy = to;
         copy.withUnsafeRawPointer { ptr in 
             withName.withCString {str in 

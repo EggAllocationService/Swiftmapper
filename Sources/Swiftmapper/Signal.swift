@@ -1,11 +1,37 @@
 import libmapper 
 
 public protocol GenericSignal: MapperObject {
-
     /// Get the signal status flags
     /// 
     /// - Parameter forInstance: The instance to get flag information for, or nil for the default
     func getStatus(forInstance: UInt64?) -> SignalStatus
+    
+    /// Get the signal type
+    /// 
+    /// If the signal has a length greater than 1, it will return the type of an array of the primitive type
+    func getSignalType() -> (any MappableType.Type)? 
+}
+
+public extension GenericSignal {
+    func getSignalType() -> (any MappableType.Type)? {
+        let mpr: mpr_type? = getProperty(withId: .MapperType);
+        if mpr == nil {
+            return nil;
+        }
+        let len: Int32 = getProperty(withId: .Length)!;
+        let vector = len > 0;
+
+        switch Int(mpr!) {
+            case MPR_INT32: 
+                return vector ? [Int32].self : Int32.self;
+            case MPR_DBL: 
+                return vector ? [Double].self : Double.self;
+            case MPR_FLT: 
+                return vector ? [Float].self : Float.self;
+            default: 
+                return nil;
+        }
+    }
 }
 
 public enum MapperSignalDirection: UInt32 {

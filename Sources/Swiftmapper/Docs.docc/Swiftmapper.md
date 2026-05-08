@@ -20,6 +20,7 @@ A library for connecting things
 
 ### Maps & Objects
 - <doc:Working-With-Properties>
+- <doc:Creating-Maps>
 - ``MapperMap``
 - ``MapperObject``
 

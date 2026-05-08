@@ -88,3 +88,13 @@ extension String: MapperType {
         return String(cString: ptr.assumingMemoryBound(to: CChar.self))
     }
 }
+
+extension mpr_type: MapperType {
+    public mutating func withUnsafeRawPointer(body: (UnsafeRawPointer) -> ()) {
+        body(&self)
+    }
+
+    public static func asMapperType() -> mpr_type {
+        return .init(UInt8(MPR_TYPE))
+    }
+}
