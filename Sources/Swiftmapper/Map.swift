@@ -32,7 +32,7 @@ public class MapperMap: MapperObject {
 
     deinit {
         if self.owned {
-            mpr_graph_free(handle);
+            mpr_map_release(handle);
         }
     }
 
