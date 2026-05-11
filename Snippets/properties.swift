@@ -16,5 +16,5 @@ print("Name: " + name!)
 device.setProperty(withName: "color.hue", to: 0.5);
 
 // snippet.setSignal
-let signal: MapperSignal<Float> = device.createSignal("MySignal", .Out);
+let signal = device.createSignal(named: "MySignal", inDirection: .Out, ofType: Float.self);
 signal.setProperty(withId: .Max, to: 10.5)

@@ -10,7 +10,7 @@ while !device.ready {
 print("Device is ready!")
 
 // snippet.signal
-let signal: MapperSignal<Float> = device.createSignal("Signal", .Out)
+let signal = device.createSignal(named: "Signal", inDirection: .Out, ofType: Float.self)
 
 // snippet.signalSet
 while true {

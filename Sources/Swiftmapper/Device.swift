@@ -46,17 +46,17 @@ public class MapperDevice: MapperObject {
     ///   - length: Specifies the vector length of the signal. If greater than one, use an array type for `T`
     ///   - withInstances: How many instances to allocate. Set to 0 if a non-instanced signal is desired.
     /// - Returns: The newly created signal
-    public func createSignal<T: MappableType>(_ name: String, _ direction: MapperSignalDirection, length: Int = 1, withInstances: Int = 0) -> MapperSignal<T> {
-        let sig_handle: mpr_sig = name.withCString { ptr in
+    public func createSignal<T: MappableType>(named: String, inDirection: MapperSignalDirection, ofType: T.Type, withLength: Int = 1, withInstances: Int = 0) -> MapperSignal<T> {
+        let sig_handle: mpr_sig = named.withCString { ptr in
             var instances = Int32(withInstances)
             if instances == 0 {
-                return mpr_sig_new(self.handle, .init(direction.rawValue), ptr, Int32(length), T.asMapperType(), nil, nil, nil, nil, nil, 0)
+                return mpr_sig_new(self.handle, .init(inDirection.rawValue), ptr, Int32(withLength), T.asMapperType(), nil, nil, nil, nil, nil, 0)
             } else {
-                return mpr_sig_new(self.handle, .init(direction.rawValue), ptr, Int32(length), T.asMapperType(), nil, nil, nil, &instances, nil, 0)
+                return mpr_sig_new(self.handle, .init(inDirection.rawValue), ptr, Int32(withLength), T.asMapperType(), nil, nil, nil, &instances, nil, 0)
             }
         };
 
-        return MapperSignal<T>(handle: sig_handle, owned: true, length: length, instances: withInstances);
+        return MapperSignal<T>(handle: sig_handle, owned: true, length: withLength, instances: withInstances);
     }
 
     /// If this device is ready

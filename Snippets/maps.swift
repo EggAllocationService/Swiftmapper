@@ -9,7 +9,7 @@ while !device.ready {
     graph.poll(andBlockFor: 10);
 }
 
-let signal: MapperSignal<Float> = device.createSignal("MySignal", .In);
+let signal = device.createSignal(named: "MySignal", inDirection: .In, ofType: Float.self);
 
 // snippet.searchSetup
 let devices = graph.getDevices();
