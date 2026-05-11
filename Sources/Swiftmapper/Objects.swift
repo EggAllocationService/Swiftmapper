@@ -13,6 +13,7 @@ public enum MapperNamedProperty: Int32 {
     case Expression = 0x0600
     case NumInstances = 0x1200
     case MapperType = 0x2400
+    case Direction = 0x0400
 }
 
 /// Common interface for Libmapper object wrappers
@@ -27,7 +28,7 @@ extension MapperObject {
     /// Get the value of a libmapper object property
     /// - Parameter withId: An identifier for a specific named property
     /// - Returns: The value of the property, or nil if it does not exist or the type is mismatched
-    public func getProperty<T: MapperType>(withId: MapperNamedProperty) -> T? {
+    public func getProperty<T: MapperType>(withId: MapperNamedProperty, as: T.Type) -> T? {
         var ptr: UnsafeRawPointer? = nil;
         var type: mpr_type = .init();
         var length: Int32 = 1;
@@ -45,7 +46,7 @@ extension MapperObject {
     /// Get the value of a libmapper object property
     /// - Parameter withName: The string identifier of a custom property 
     /// - Returns: The value of the property, or nil if it does not exist or the type is mismatched
-    public func getProperty<T: MapperType>(withName: String) -> T? {
+    public func getProperty<T: MapperType>(withName: String, as: T.Type) -> T? {
         return withName.withCString { str in 
             var ptr: UnsafeRawPointer? = nil;
             var length: Int32 = 1;

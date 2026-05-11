@@ -9,7 +9,7 @@ while !device.ready {
 }
 
 //snippet.show
-let name: String? = device.getProperty(withId: .Name); // = "MyDevice"
+let name: String? = device.getProperty(withId: .Name, as: String.self); // = "MyDevice"
 print("Name: " + name!)
 
 // snippet.setDevice

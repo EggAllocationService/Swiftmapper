@@ -17,13 +17,13 @@ var targetSignal: GenericSignal? = nil;
 
 // snippet.searchLoop
 for dev in devices {
-    let devName: String = dev.getProperty(withId: .Name)!;
+    let devName = dev.getProperty(withId: .Name, as: String.self)!;
     print("Searching device " + devName)
     let signals = dev.getSignals(inDirection: .Out);
 
     for sig in signals {
         let type = sig.getSignalType();
-        let name: String = sig.getProperty(withId: .Name)!;
+        let name = sig.getProperty(withId: .Name, as: String.self)!;
 
         print("\tSearching signal: " + name + " with type " + type.debugDescription);
 

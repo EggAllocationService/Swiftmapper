@@ -10,15 +10,18 @@ public protocol GenericSignal: MapperObject {
     /// 
     /// If the signal has a length greater than 1, it will return the type of an array of the primitive type
     func getSignalType() -> (any MappableType.Type)? 
+
+    /// Get the signal direction
+    func getDirection() -> MapperSignalDirection
 }
 
 public extension GenericSignal {
     func getSignalType() -> (any MappableType.Type)? {
-        let mpr: mpr_type? = getProperty(withId: .MapperType);
+        let mpr = getProperty(withId: .MapperType, as: mpr_type.self);
         if mpr == nil {
             return nil;
         }
-        let len: Int32 = getProperty(withId: .Length)!;
+        let len = getProperty(withId: .Length, as: Int32.self)!;
         let vector = len > 1;
 
         switch Int(mpr!) {
@@ -32,11 +35,19 @@ public extension GenericSignal {
                 return nil;
         }
     }
+
+    func getDirection() -> MapperSignalDirection {
+        let dir = self.getProperty(withId: .Direction, as: Int32.self)!;
+
+        return MapperSignalDirection.init(rawValue: UInt32(dir))!;
+    }
 }
 
 public enum MapperSignalDirection: UInt32 {
     case In = 0x01
     case Out = 0x02
+    case Either = 0x03
+    case Both = 0x07
 }
 
 
@@ -124,8 +135,8 @@ public class UnknownSignal : GenericSignal {
     /// If you know for certain the type of the `UnknownSignal`, you can convert it to a `MapperSignal<T>` using this method
     /// - Returns: A strongly typed non-owning wrapper for the same signal handle
     public func bind<T>(to: T.Type) -> MapperSignal<T> {
-        let length: Int32 = getProperty(withId: .Length)!;
-        let instances: Int32 = getProperty(withId: .NumInstances)!;
+        let length = getProperty(withId: .Length, as: Int32.self)!;
+        let instances = getProperty(withId: .NumInstances, as: Int32.self)!;
         return MapperSignal(handle: handle, owned: false, length: Int(length), instances: Int(instances));
     }
 }
