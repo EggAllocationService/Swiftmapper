@@ -123,7 +123,7 @@ public class UnknownSignal : GenericSignal {
     /// 
     /// If you know for certain the type of the `UnknownSignal`, you can convert it to a `MapperSignal<T>` using this method
     /// - Returns: A strongly typed non-owning wrapper for the same signal handle
-    public func bind<T>() -> MapperSignal<T> {
+    public func bind<T>(to: T.Type) -> MapperSignal<T> {
         let length: Int32 = getProperty(withId: .Length)!;
         let instances: Int32 = getProperty(withId: .NumInstances)!;
         return MapperSignal(handle: handle, owned: false, length: Int(length), instances: Int(instances));
