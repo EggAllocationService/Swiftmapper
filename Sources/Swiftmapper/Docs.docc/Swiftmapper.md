@@ -14,7 +14,7 @@ A library for connecting things
 - ``MapperDevice``
 
 ### Creating Signals
-- ``MapperDevice/createSignal(_:_:length:withInstances:)``
+- ``MapperDevice/createSignal(named:inDirection:ofType:withLength:withInstances:)``
 - ``MapperSignal``
 - ``UnknownSignal``
 

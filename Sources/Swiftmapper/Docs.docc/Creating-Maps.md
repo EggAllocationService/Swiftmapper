@@ -29,7 +29,7 @@ Next, we need to loop through each device and its signals. We can skip some work
 > For example, if we were instead looking for a float vector signal with a length of three, the following code would be appropriate:
 > ```swift
 > // ...
-> let length: Int = sig.getProperty(withName: .Length)!;
+> let length = sig.getProperty(withName: .Length, as: Int32.self)!;
 > if type == [Float].self && length == 3 && name == "expr" {
 >   // ...
 > }

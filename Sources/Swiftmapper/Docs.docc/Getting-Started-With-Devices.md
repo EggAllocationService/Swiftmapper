@@ -26,9 +26,9 @@ Devices must be polled periodically to send and recieve signal values. If you ha
 Signals are how you can expose interesting values or controls to the libmapper graph. In Swiftmapper, signals are strongly typed; you must specify the data type you want to transport when constructing it:
 @Snippet(path: "create-device", slice: "signal")
 
-> Supported types are `Int`, `Float`, and `Double`. If you want to create a vector signal, include the `length` parameter when calling `createSignal` and use an array type:
+> Supported types are `Int`, `Float`, and `Double`. If you want to create a vector signal, include the `withLength` parameter when calling `createSignal` and use an array type:
 > ```swift
-> let signal: MapperSignal<[Float]> = device.createSignal("Signal", .Out, length: 2);
+> let signal = device.createSignal(named: "Signal", inDirection: .Out, ofType: [Float].self, withLength: 2);
 > ```
 
 Now that we have a signal, we can start emitting data. ``MapperSignal/setValue(to:onInstance:)`` lets you update signal instance data - we'll be ignoring the `onInstance` parameter for now.

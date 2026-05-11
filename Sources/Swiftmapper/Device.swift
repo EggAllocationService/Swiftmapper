@@ -41,9 +41,10 @@ public class MapperDevice: MapperObject {
 
     /// Create a new signal on this device. This method will only work if the device is owned locally
     /// - Parameters:
-    ///   - name: Name of the signals. Spaces are prohibited
-    ///   - direction: Whether this signal is incoming or outgoing
-    ///   - length: Specifies the vector length of the signal. If greater than one, use an array type for `T`
+    ///   - named: Name of the signals. Spaces are prohibited
+    ///   - inDirection: Whether this signal is incoming or outgoing
+    ///   - ofType: The type of data the signal carries
+    ///   - withLength: Specifies the vector length of the signal. If greater than one, use an array type for `T`
     ///   - withInstances: How many instances to allocate. Set to 0 if a non-instanced signal is desired.
     /// - Returns: The newly created signal
     public func createSignal<T: MappableType>(named: String, inDirection: MapperSignalDirection, ofType: T.Type, withLength: Int = 1, withInstances: Int = 0) -> MapperSignal<T> {

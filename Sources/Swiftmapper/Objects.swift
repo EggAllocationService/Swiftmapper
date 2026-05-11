@@ -27,6 +27,7 @@ public protocol MapperObject {
 extension MapperObject {
     /// Get the value of a libmapper object property
     /// - Parameter withId: An identifier for a specific named property
+    /// - Parameter as: The type to access the property as
     /// - Returns: The value of the property, or nil if it does not exist or the type is mismatched
     public func getProperty<T: MapperType>(withId: MapperNamedProperty, as: T.Type) -> T? {
         var ptr: UnsafeRawPointer? = nil;
@@ -45,6 +46,7 @@ extension MapperObject {
 
     /// Get the value of a libmapper object property
     /// - Parameter withName: The string identifier of a custom property 
+    /// - Parameter as: The type to access the property as
     /// - Returns: The value of the property, or nil if it does not exist or the type is mismatched
     public func getProperty<T: MapperType>(withName: String, as: T.Type) -> T? {
         return withName.withCString { str in 

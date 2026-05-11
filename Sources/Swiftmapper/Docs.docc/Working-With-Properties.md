@@ -24,11 +24,9 @@ The `getProperty` and `setProperty` methods allow you to get and set property va
 ### Via ID
 
 Built-in properties are accessed via a unique identifier rather than a string, for space efficency. To access or set things like a device name or a signal's min/max, use 
-``MapperObject/getProperty(withId:)`` and ``MapperObject/setProperty(withId:to:publish:)``
+``MapperObject/getProperty(withId:as:)`` and ``MapperObject/setProperty(withId:to:publish:)``
 
 @Snippet(path: "properties", slice: "device")
-
-> As `getProperty` has a generic return value, you must explicitly specify the variable type. It also must be an optional - not all properties are available on all objects.
 
 Some built-in properties can provide useful metadata for session managers or other devices. For example, we can use the property `Max` to indicate what we expect the maximum value for a signal to be.
 
@@ -38,7 +36,7 @@ Some built-in properties can provide useful metadata for session managers or oth
 
 The built in properties provide a standard framework for simple metadata that you'll likely find useful - but sometimes you need more flexibility. 
 Libmapper supports adding your own custom properties to any object, with any type. To work with these custom properties, you'll 
-use the functions ``MapperObject/getProperty(withName:)`` and ``MapperObject/setProperty(withName:to:publish:)``
+use the functions ``MapperObject/getProperty(withName:as:)`` and ``MapperObject/setProperty(withName:to:publish:)``
 
 For example, Webmapper looks for a custom property `color.hue` to determine how to color the UI elements for a device. 
 You can set that yourself to match some real-world equivalent - for example the physical color of your device or an indicator light on it.
