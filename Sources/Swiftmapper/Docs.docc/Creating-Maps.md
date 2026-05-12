@@ -46,6 +46,4 @@ The initializer ``MapperMap/init(from:to:)-(GenericSignal,_)`` lets you create a
 ### Map Ownership
 
 Since maps are not "owned" by any single device, this presents challenges with the automatic resource management provided by Swiftmapper's wrappers. By default any map you create locally will
-be marked as owned, and will be deleted once the Swift object is deinitialized. This may not be desirable in many cases, and so you may use the method ``MapperMap/forget()`` to release ownership of the map.
-
-``MapperMap`` references obtained by querying the graph are unowned by default, but you can take ownership of them via ``MapperMap/take()`` if you would like their lifetime to be bound to the wrapper object. Once the wrapper's reference count reaches zero and Swift calls `deinit` the map will be removed from the graph.
+be marked as unowned, and will not be deleted once the Swift object is deinitialized. This may not be desirable in some cases, and so you may use the method ``MapperMap/take()`` to take ownership of the map.
