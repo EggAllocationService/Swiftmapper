@@ -10,7 +10,7 @@ public class MapperMap: MapperObject {
         var toHandle: mpr_sig? = to.getHandle();
         handle = mpr_map_new(1, &fromHandle, 1, &toHandle);
 
-        owned = true;
+        owned = false;
     }
 
     /// Create a many-to-one map
@@ -21,7 +21,7 @@ public class MapperMap: MapperObject {
             mpr_map_new(Int32(from.count), UnsafeMutablePointer(mutating: fromPtr.baseAddress!), 1, &toHandle)
         }
 
-        owned = true;
+        owned = false;
     }
     
     internal init(withHandle: mpr_map) {
