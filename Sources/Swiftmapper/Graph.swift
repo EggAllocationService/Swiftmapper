@@ -13,6 +13,7 @@ public struct MapperSubscriptionTypes: OptionSet, Sendable {
     public static let maps = MapperSubscriptionTypes(rawValue: MPR_MAP)
 }
 
+
 public class MapperGraph: MapperObject {
     internal private(set) var handle: mpr_graph
     public init() {
@@ -63,4 +64,21 @@ public class MapperGraph: MapperObject {
             MapperMap(withHandle: $0)
         }
     }
+
+    public func addCallback(to: MapperSubscriptionTypes, handler: (any MapperObject) -> ()) {
+        mpr_graph_add_cb(self.handle, graphCallbackHandler, Int32(to.rawValue), Unmanaged.passUnretained(self).toOpaque())
+    }
+}
+
+fileprivate func graphCallbackHandler(graph: mpr_graph?, obj: mpr_obj?, status: mpr_status, data: UnsafeRawPointer?) {
+    if data == nil || graph == nil {
+        return;
+    }
+
+    let data: Unmanaged<MapperGraph> = Unmanaged.fromOpaque(data!);
+    let obj = data.takeRetainedValue()
+    if obj.handle != graph {
+        return;
+    }
+    
 }

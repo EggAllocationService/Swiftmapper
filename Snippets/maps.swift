@@ -29,6 +29,7 @@ for dev in devices {
 
         if type == Double.self && name == "expr" {
             targetSignal = sig;
+            print("\t\tUsing signal \(name)")
             break;
         }
     }
