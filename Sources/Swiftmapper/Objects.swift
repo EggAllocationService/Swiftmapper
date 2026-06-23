@@ -1,19 +1,19 @@
 import libmapper
 
 public enum MapperNamedProperty: Int32 {
-    case Ephemeral = 0x0500
-    case Muted = 0x1000
-    case Max = 0x0E00
-    case Min = 0x0F00
-    case Unit = 0x2500
-    case Length = 0x0B00
-    case Name = 0x1100
-    case Status = 0x2100
-    case Id = 0x0800
-    case Expression = 0x0600
-    case NumInstances = 0x1200
-    case MapperType = 0x2400
-    case Direction = 0x0400
+    case Ephemeral = 0x0700
+    case Muted = 0x1200
+    case Max = 0x1000
+    case Min = 0x1100
+    case Unit = 0x2600
+    case Length = 0x0D00
+    case Name = 0x1300
+    case Status = 0x2200
+    case Id = 0x0A00
+    case Expression = 0x0800
+    case NumInstances = 0x1400
+    case MapperType = 0x2500
+    case Direction = 0x0600
 }
 
 /// Common interface for Libmapper object wrappers
