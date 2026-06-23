@@ -53,6 +53,16 @@ extension Int32: MappableType {
     }
 }
 
+extension Int64: MappableType {
+        public static func asMapperType() -> mpr_type {
+        return .init(UInt8(MPR_INT64));
+    }
+
+    public mutating func withUnsafeRawPointer(body: (UnsafeRawPointer) -> ()) {
+        body(&self);
+    }
+}
+
 extension Float32: MappableType {
     public static func asMapperType() -> mpr_type {
         return .init(UInt8(MPR_FLT));

@@ -12,6 +12,9 @@ while !device.ready {
 let name: String? = device.getProperty(withId: .Name, as: String.self); // = "MyDevice"
 print("Name: " + name!)
 
+let id = device.getProperty(withId: .Id, as: Int64.self);
+print("Id: " + String(id!));
+
 // snippet.setDevice
 device.setProperty(withName: "color.hue", to: 0.5);
 
